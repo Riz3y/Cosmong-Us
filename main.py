@@ -1,29 +1,45 @@
+from tkinter import *
 import os
-import shutil
+from tkinter import filedialog
+from shutil import copyfile
+import sys
 
-src = "./dependincies"
-
-targetPath = '/Among Us_Data/Plugins/X86'
-
-
-def find_files(filename, search_path):
-    result = []
-    for root, dir, files in os.walk(search_path):
-        if filename in files:
-            result.append(os.path.join(root, filename))
-    return result
+gamePath = 'C:\Program Files (x86)\Steam\steamapps\common\Stardew Valley'
+filename = filedialog.askopenfilename
+root = Tk()
 
 
-print("Welcome To Cosmong Us!")
-try:
-    gamePath = find_files("Among Us.exe", "D:/Program Files (x86)")
+def browseFolder():
+    global gamePath
+    folder_selected = filedialog.askdirectory()
+    gamePath = folder_selected
 
-except:
-    print("Directory was unable to be found")
-    gamePath = input("Where is the Among Us Folder Located")
 
-os.rename("D:/Program Files (x86)/Steam/steamapps/common/Among Us/Among Us_Data/Plugins/X86/steam_api.dll",
-          "D:/Program Files (x86)/Steam/steamapps/common/Among Us/Among Us_Data/Plugins/X86/steam_api_o.dll")
-for file in os.listdir(src):
-    print(file)
-    shutil.copy2(src + '/' + file, gamePath + targetPath)
+def install():
+    global gamePath
+    if os.path.isfile(gamePath + "/Among Us_Data/Plugins/X86/steam_api_o.dll"):
+        print("Game has been modified")
+    else:
+        try:
+            os.rename("D:/Program Files (x86)/Steam/steamapps/common/Among Us/Among Us_Data/Plugins/X86/steam_api.dll",
+                      "D:/Program Files (x86)/Steam/steamapps/common/Among Us/Among Us_Data/Plugins/X86/steam_api_o.dll")
+        except:
+            print("steam_api not found")
+
+    if os.path.isfile(gamePath + "/Among Us_Data/Plugins/X86/cream_api.ini"):
+        print("config installed")
+    else:
+        if os.path.isfile(os.getcwd() + "/dependencys"):
+            for file in os.listdir(os.getcwd()):
+                print(file)
+
+
+text1 = Label(root, text="Welcome To Cosmong Us!")
+BrowseButton = Button(root, text="Browse", command=browseFolder)
+
+installButton = Button(root, text="install", command=install)
+installButton.pack(side=BOTTOM)
+BrowseButton.pack()
+text1.pack()
+
+mainloop()
