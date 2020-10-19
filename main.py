@@ -1,3 +1,4 @@
+import shutil
 from tkinter import *
 import os
 from tkinter import filedialog
@@ -7,7 +8,6 @@ import sys
 gamePath = 'C:\Program Files (x86)\Steam\steamapps\common\Stardew Valley'
 filename = filedialog.askopenfilename
 root = Tk()
-
 
 def browseFolder():
     global gamePath
@@ -29,9 +29,17 @@ def install():
     if os.path.isfile(gamePath + "/Among Us_Data/Plugins/X86/cream_api.ini"):
         print("config installed")
     else:
-        if os.path.isfile(os.getcwd() + "/dependencys"):
+        if os.path.isfile(os.getcwd() + "/dependencies"):
             for file in os.listdir(os.getcwd()):
                 print(file)
+
+    if os.path.isfile(gamePath + "/Among Us_Data/Plugins/X86/cream_api.ini"):
+        print("config installed")
+    else:
+        if os.path.isfile(os.getcwd() + "/dependencies/steam_api.dll"):
+            for file in os.listdir(os.getcwd() + "/dependencies"):
+                shutil.copy(os.getcwd() + "/dependencies/" + file, gamePath + "/Among Us_Data/Plugins/X86/")
+                print(file + " Successfully Copied")
 
 
 text1 = Label(root, text="Welcome To Cosmong Us!")
